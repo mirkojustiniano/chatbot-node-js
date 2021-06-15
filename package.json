@@ -1,0 +1,22 @@
+{
+  "name": "chatbot-node",
+  "version": "1.0.0",
+  "description": "Node server for a chatbot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mirkojustiniano/chatbot-node-js.git"
+  },
+  "keywords": [
+    "chatbot"
+  ],
+  "author": "Mirko Justiniano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mirkojustiniano/chatbot-node-js/issues"
+  },
+  "homepage": "https://github.com/mirkojustiniano/chatbot-node-js#readme"
+}
