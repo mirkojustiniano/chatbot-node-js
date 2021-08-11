@@ -15,14 +15,14 @@ io.on("connection", socket => {
   console.log('connected...');
   socket.emit("message", "Greetings!");
 
-  // handle the event sent with socket.send()
   socket.on("message", (data) => {
     console.log('message...');
     console.log(data);
+    socket.emit("message", data);
   });
 
   socket.on("disconnect", (reason) => {
     console.log('disconnect...');
-    console.log(reason); // "ping timeout"
+    console.log(reason);
   });
 });

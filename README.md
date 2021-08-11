@@ -63,4 +63,3 @@ From the project root folder run the command:
 
     node app.js
 
-and visit `http://localhost:3000` in your browser.
