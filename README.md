@@ -30,7 +30,6 @@ You can verify that Node has been successfully installed by typing this command:
 
     node -v
 
-
 You should get an output similar to this one:
 
     v16.3.0
@@ -47,7 +46,17 @@ The output for that should be something like:
 
     7.15.1
 
+# Dependencies
+From the project's root folder we can use `npm` to install the dependencies:
 
+    npm install
+
+NPM will automatically install the project dependencies:
+
+ - [Express](https://expressjs.com/)
+ - [Socket.io](https://socket.io/docs/v4/index.html)
+ - [Node Wit](https://github.com/wit-ai/node-wit)
+ 
 # Starting the Server
 
 From the project root folder run the command:

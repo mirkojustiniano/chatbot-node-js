@@ -1,13 +1,28 @@
-const http = require('http');
+const express = require("express");
+const socket = require("socket.io");
 
-let app = http.createServer((req, res) => {
-    // Set a response type of plain text for the response
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-
-    // Send back a response and end the connection
-    res.end('Hello World!\n');
+// App setup
+const PORT = 5000;
+const app = express();
+const server = app.listen(PORT, function () {
+  console.log(`Listening on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
 });
 
-// Start the server on port 3000
-app.listen(3000, '127.0.0.1');
-console.log('Node server running on port 3000');
+const io = socket(server);
+
+io.on("connection", socket => {
+  console.log('connected...');
+  socket.emit("message", "Greetings!");
+
+  // handle the event sent with socket.send()
+  socket.on("message", (data) => {
+    console.log('message...');
+    console.log(data);
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log('disconnect...');
+    console.log(reason); // "ping timeout"
+  });
+});
