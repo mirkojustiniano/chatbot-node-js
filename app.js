@@ -1,6 +1,7 @@
 const express = require("express");
 const socket = require("socket.io");
 const { Wit } = require('node-wit');
+const request = require('request');
 
 // App setup
 const PORT = 5000;
@@ -12,7 +13,7 @@ const server = app.listen(PORT, function () {
 
 // Wit setup
 const client = new Wit({
-  accessToken: TOKEN_HERE
+  accessToken: `TOKEN`
 });
 
 const io = socket(server);
@@ -43,7 +44,7 @@ const handleMessage = (socket, {text, entities, traits}) => {
   const greetings = firstValue(traits, 'wit$greetings');
   const sentiment = firstValue(traits, 'wit$sentiment');
   if (chuckNorris) {
-    socket.emit("message", "Chuck Norris Joke Here");
+    chuckNorrisFacts(socket);
   } else if (sentiment) {
     const reply = sentiment === 'positive' ? 'Thank you.' : 'Hmm.';
     socket.emit("message", reply);
@@ -64,4 +65,19 @@ const firstValue = (obj, key) => {
     return null;
   }
   return val;
+};
+
+const chuckNorrisFacts = (socket) => {
+  request('https://api.chucknorris.io/jokes/random', function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var parsed = JSON.parse(body);
+      if (parsed && parsed.value) {
+        socket.emit("message", parsed.value);
+      } else {
+        socket.emit("message", "Oops, I couldn't find any jokes...");
+      }
+    } else {
+      socket.emit("message", "Oops, I couldn't find Chuck Norris!");
+    }
+  });
 };
