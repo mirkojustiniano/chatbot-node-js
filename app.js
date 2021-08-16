@@ -16,6 +16,7 @@ const client = new Wit({
   accessToken: `TOKEN`
 });
 
+// Socket setup
 const io = socket(server);
 
 io.on("connection", socket => {
@@ -39,7 +40,7 @@ io.on("connection", socket => {
   });
 });
 
-const handleMessage = (socket, {text, entities, traits}) => {
+const handleMessage = (socket, {entities, traits}) => {
   const chuckNorris = firstValue(entities, 'chuck-norris:chuck-norris');
   const greetings = firstValue(traits, 'wit$greetings');
   const sentiment = firstValue(traits, 'wit$sentiment');
