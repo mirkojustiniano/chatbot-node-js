@@ -44,8 +44,12 @@ const handleMessage = (socket, {entities, traits}) => {
   const chuckNorris = firstValue(entities, 'chuck-norris:chuck-norris');
   const greetings = firstValue(traits, 'wit$greetings');
   const sentiment = firstValue(traits, 'wit$sentiment');
+  const location = firstBody(entities, 'wit$location:location');
+  console.log(location);
   if (chuckNorris) {
     chuckNorrisFacts(socket);
+  } else if (location) {
+    getWeatherFor(socket, location);
   } else if (sentiment) {
     const reply = sentiment === 'positive' ? 'Thank you.' : 'Hmm.';
     socket.emit("message", reply);
@@ -68,6 +72,18 @@ const firstValue = (obj, key) => {
   return val;
 };
 
+const firstBody = (obj, key) => {
+  const val = obj && obj[key] &&
+    Array.isArray(obj[key]) &&
+    obj[key].length > 0 &&
+    obj[key][0].body
+  ;
+  if (!val) {
+    return null;
+  }
+  return val;
+};
+
 const chuckNorrisFacts = (socket) => {
   request('https://api.chucknorris.io/jokes/random', function(error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -79,6 +95,23 @@ const chuckNorrisFacts = (socket) => {
       }
     } else {
       socket.emit("message", "Oops, I couldn't find Chuck Norris!");
+    }
+  });
+};
+
+const getWeatherFor = (socket, location) => {
+  request('https://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial&APPID=TOKEN', function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var parsed = JSON.parse(body);
+      const description = parsed && parsed.weather && parsed.weather[0] && parsed.weather[0].description;
+      const temperature = parsed && parsed.main && parsed.main.temp;
+      if (description || temperature) {
+        socket.emit("message", "Looks like " + (description ? description : "a normal day") + (temperature ? " with a temperature of " + temperature : ""));
+      } else {
+        socket.emit("message", "Oops, I couldn't find that weather");
+      }
+    } else {
+      socket.emit("message", "Oops, I couldn't reach the weather!");
     }
   });
 };
